@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ===================== Page title ===================== -->
+<title>The Open Pool 2026 · Royal Birkdale</title>
+<style>
+  /* ===================== THEME: Links Weather =====================
+     Dune grass, sand, and a grey North Sea sky. Re-theme by editing ONLY
+     these variables (see references/theming.md).
+     --under stays in the red family (golf convention for under par). */
+  :root {
+    --bg:       #eceae1;   /* bleached sand / overcast light */
+    --surface:  #fbfaf5;   /* dry sand */
+    --ink:      #23291f;   /* wet-turf near-black green */
+    --muted:    #7a8074;   /* dune shadow */
+    --accent:   #b39b5b;   /* marram grass gold */
+    --accent-2: #4f5a56;   /* grey sky over the Irish Sea */
+    --under:    #a8322b;   /* under par — red, always */
+    --even:     #23291f;
+    --over:     #23291f;
+    --border:   #d5d0c0;   /* sand hairline */
+    --leader:   #b39b5b;
+    --good-bg:  #f0f3ea;
+    --good-br:  #7d9161;   /* fairway green */
+    --good-tx:  #48583a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, 'Times New Roman', serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+
+  /* HEADER / MASTHEAD — grey sky washing down into dune grass */
+  .header { background: linear-gradient(180deg, #626d68 0%, var(--accent-2) 55%, #3f4845 100%); color:#fff; border-bottom:3px solid var(--accent); }
+  .header-inner { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 1.25rem; display:flex; align-items:flex-start; justify-content:space-between; gap:1.5rem; }
+  .header-text { flex:1; min-width:0; }
+  .jug { flex:0 0 auto; width:84px; height:auto; color:var(--accent); opacity:.92; margin-top:4px; }
+  @media (max-width:640px){ .jug { width:48px; } .header-inner { gap:1rem; } }
+  .header-badge { display:inline-block; font-family: Arial, sans-serif; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); border:1px solid var(--accent); padding:4px 12px; margin-bottom:1rem; }
+  .header h1 { font-size:2rem; font-weight:normal; line-height:1.2; }
+  .header h1 span { color:var(--accent); }
+  .header-sub { font-family:Arial, sans-serif; font-size:13px; color:#c3c9c0; margin-top:.25rem; }
+  .header-meta { display:flex; gap:2rem; flex-wrap:wrap; padding-top:1rem; margin-top:1rem; border-top:1px solid rgba(255,255,255,.15); font-family:Arial, sans-serif; font-size:12px; color:#c3c9c0; }
+  .header-meta strong { color:var(--accent); display:block; font-size:11px; letter-spacing:1px; text-transform:uppercase; margin-bottom:2px; }
+
+  .tabs { background: color-mix(in srgb, var(--accent-2) 85%, #000); border-bottom:2px solid var(--accent); }
+  .tabs-inner { max-width:1100px; margin:0 auto; display:flex; }
+  .tab { font-family:Arial, sans-serif; font-size:13px; letter-spacing:.5px; padding:12px 20px; cursor:pointer; color:#c3c9c0; border:none; background:none; }
+  .tab.active { color:var(--accent); border-bottom:2px solid var(--accent); margin-bottom:-2px; }
+  .tab:hover:not(.active){ color:#fff; }
+
+  .main { max-width:1100px; margin:0 auto; padding:1.5rem; }
+
+  .status-bar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-bottom:1rem; }
+  .status-pill { display:inline-flex; align-items:center; gap:6px; font-family:Arial, sans-serif; font-size:12px; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:5px 12px; }
+  .status-dot { width:7px; height:7px; border-radius:50%; background:#10b981; }
+  .status-dot.pre { background:var(--accent); }
+  .status-dot.err { background:#cc3333; }
+  .refresh-btn { font-family:Arial, sans-serif; font-size:12px; background:none; border:1px solid var(--border); border-radius:4px; padding:5px 12px; cursor:pointer; color:var(--ink); }
+  .refresh-btn:hover { border-color:var(--accent); }
+
+  .note { font-family:Arial, sans-serif; font-size:12px; color:var(--muted); background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:2px; padding:8px 12px; margin-bottom:1.25rem; }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:2px; overflow:hidden; margin-bottom:1.5rem; }
+  .card-header { background:var(--accent-2); color:var(--accent); font-family:Arial, sans-serif; font-size:11px; letter-spacing:2px; text-transform:uppercase; padding:10px 16px; }
+
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  thead th { background: color-mix(in srgb, var(--bg) 70%, #fff); font-family:Arial, sans-serif; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); padding:9px 12px; text-align:left; border-bottom:1px solid var(--border); cursor:pointer; white-space:nowrap; user-select:none; }
+  tbody tr { border-bottom:1px solid color-mix(in srgb, var(--border) 60%, #fff); }
+  tbody tr:hover { background: color-mix(in srgb, var(--bg) 50%, #fff); }
+  tbody td { padding:10px 12px; vertical-align:middle; }
+  .rank { font-family:Arial, sans-serif; font-size:12px; font-weight:bold; color:var(--muted); width:36px; }
+  .rank-1 { color:var(--accent); } .rank-2 { color:#9ca3af; } .rank-3 { color:#b45309; }
+  .entry-name { font-weight:bold; }
+  .entry-owner { font-family:Arial, sans-serif; font-size:12px; color:var(--muted); margin-top:2px; }
+  .score-num { font-family:'Courier New', monospace; font-size:14px; font-weight:bold; }
+  .score-under { color:var(--under); } .score-even { color:var(--even); } .score-over { color:var(--over); }
+  .earnings { font-family:Arial, sans-serif; font-size:13px; }
+  .golfer-chips { display:flex; flex-wrap:wrap; gap:4px; max-width:440px; }
+  .chip { font-family:Arial, sans-serif; font-size:11px; padding:2px 7px; border-radius:2px; border:1px solid var(--border); background:var(--bg); white-space:nowrap; }
+  .chip.made-cut { border-color:var(--good-br); color:var(--good-tx); background:var(--good-bg); }
+  .chip.missed-cut { border-color:#d1d5db; color:#9ca3af; text-decoration:line-through; background:#f9fafb; }
+  .chip.leading { border-color:var(--leader); color:#6b5824; background:#f7f2e2; }
+  .entry-row { cursor:pointer; }
+  .expand-row td { padding:0; border-bottom:2px solid var(--accent); }
+  .expand-inner { padding:14px 16px; background: color-mix(in srgb, var(--bg) 80%, #fff); }
+  .golfer-card-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:8px; }
+  .golfer-card { background:var(--surface); border:1px solid var(--border); border-radius:2px; padding:10px 12px; }
+  .golfer-card.leading { border-color:var(--leader); background:#f9f6ec; }
+  .golfer-card.missed-cut { opacity:.55; }
+  .golfer-card-name { font-family:Arial, sans-serif; font-size:13px; font-weight:bold; text-transform:uppercase; letter-spacing:.5px; }
+  .golfer-card-score { font-family:'Courier New', monospace; font-size:20px; font-weight:bold; margin:4px 0 2px; }
+  .golfer-card-meta { font-family:Arial, sans-serif; font-size:11px; color:var(--muted); }
+  .golfer-card-earn { font-family:Arial, sans-serif; font-size:11px; color:var(--good-tx); margin-top:4px; }
+  .chevron { float:right; font-size:12px; color:var(--muted); }
+
+  .payout-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:.3rem .8rem; font-family:Arial, sans-serif; font-size:13px; padding:1rem; }
+  .payout-grid div { display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px dotted var(--border); }
+
+  .comm { max-width:680px; }
+  .form-group { margin-bottom:1rem; }
+  .form-group label { display:block; font-family:Arial, sans-serif; font-size:12px; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .form-group input { width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:2px; font-size:13px; font-family:'Courier New', monospace; background:var(--surface); }
+  .btn { font-family:Arial, sans-serif; font-size:13px; padding:9px 20px; border:1px solid var(--accent-2); background:var(--accent-2); color:#fff; border-radius:2px; cursor:pointer; }
+  .btn-secondary { background:transparent; color:var(--ink); }
+  .help { font-family:Arial, sans-serif; font-size:12px; color:var(--muted); line-height:1.5; }
+  .help code { background: color-mix(in srgb, var(--bg) 60%, #fff); padding:1px 5px; border-radius:3px; }
+  .loading, .no-data { font-family:Arial, sans-serif; color:var(--muted); padding:2rem; text-align:center; }
+  .hidden { display:none; }
+  #map-wrap table td { padding:6px 8px; }
+  #map-wrap select { font-size:13px; padding:4px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <!-- ===================== MASTHEAD ===================== -->
+    <div class="header-text">
+      <div class="header-badge">154th Open Championship &middot; Royal Birkdale</div>
+      <h1>The Open <span>Pool</span> 2026</h1>
+      <div class="header-sub">Southport, England &middot; ranked by projected winnings &middot; all 6 golfers count</div>
+      <div class="header-meta">
+        <div><strong>Format</strong>Each entry drafts 6 golfers</div>
+        <div><strong>Scoring</strong>Sum of projected winnings</div>
+        <div><strong>Purse</strong>$17.5M &middot; winner $3.2M</div>
+        <div><strong>Live</strong>Via ESPN &middot; auto-refresh</div>
+      </div>
+    </div>
+
+    <!-- Claret Jug — original SVG silhouette, inherits --accent via currentColor -->
+    <svg class="jug" viewBox="0 0 76 104" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The Claret Jug">
+      <g fill="currentColor">
+        <circle cx="34" cy="14" r="2.9"/>
+        <rect x="32.6" y="16" width="2.8" height="4"/>
+        <path d="M 24.5 30 C 24.5 21.5, 28.5 18.5, 34 18.5 C 39.5 18.5, 43.5 21.5, 43.5 30 Z"/>
+        <path d="M 21.5 30 L 46.5 30 L 46.5 34.2 L 21.5 34.2 C 20 34.2, 19.4 30, 21.5 30 Z"/>
+        <path d="M 25.5 33.5 L 27 45 L 41 45 L 42.5 33.5 Z"/>
+        <path d="M 26.5 44 C 13.5 53, 13.5 71, 24.5 79 L 43.5 79 C 54.5 71, 54.5 53, 41.5 44 Z"/>
+        <path d="M 28.5 77 L 29.5 86 L 38.5 86 L 39.5 77 Z"/>
+        <path d="M 22.5 93 C 22.5 88.5, 27.5 87.5, 28.5 84.5 L 39.5 84.5 C 40.5 87.5, 45.5 88.5, 45.5 93 Z"/>
+        <rect x="19.5" y="92" width="29" height="4" rx="1.9"/>
+      </g>
+      <path d="M 43 35 C 58 37.5, 63 50, 52 59.5" fill="none" stroke="currentColor" stroke-width="3.1" stroke-linecap="round"/>
+    </svg>
+  </div>
+</div>
+
+<div class="tabs"><div class="tabs-inner">
+  <button class="tab active" id="tab-standings" onclick="showTab('standings')">Standings</button>
+  <button class="tab" id="tab-payouts" onclick="showTab('payouts')">Payouts</button>
+  <button class="tab" id="tab-comm" onclick="showTab('comm')">Commissioner</button>
+</div></div>
+
+<div class="main">
+
+  <!-- STANDINGS -->
+  <div id="view-standings">
+    <div class="status-bar">
+      <span class="status-pill"><span class="status-dot pre" id="state-dot"></span><span id="state-text">Loading…</span></span>
+      <span style="display:flex; gap:.5rem; align-items:center;">
+        <span class="status-pill" id="refresh-pill">Scores: —</span>
+        <button class="refresh-btn" onclick="fetchScores(true)">↻ Refresh</button>
+      </span>
+    </div>
+    <!-- ===================== PAYOUT BASIS NOTE ===================== -->
+    <div class="note" id="estimate-note">
+      Payouts are the R&amp;A's <strong>official 2026 breakdown</strong> for Royal Birkdale ($17.5M purse &middot; $3.2M to the winner &middot; money to 70th). Standings during play are still a <strong>projection</strong> — a golfer's money is looked up from his position at this moment, and ties are paid the full bracket amount rather than averaged. Missed-cut golfers are credited $9,100.
+    </div>
+    <div class="card">
+      <div class="card-header">Pool Standings</div>
+      <div id="standings-table-wrap"><div class="no-data">Loading entries…</div></div>
+    </div>
+  </div>
+
+  <!-- PAYOUTS -->
+  <div id="view-payouts" class="hidden">
+    <div class="card">
+      <div class="card-header">Official Payout Structure &middot; $17.5M Purse</div>
+      <div class="payout-grid" id="payout-grid"></div>
+    </div>
+    <div class="note">Official R&amp;A figures for the 154th Open. Non-qualifiers after two rounds: leading 10 professionals and ties $12,900; next 20 and ties $10,750; the remainder $9,100 — this board credits every missed cut at the $9,100 base. If more than 70 players make the cut, the R&amp;A reduces each paying place by $125 down to a $39,450 floor.</div>
+  </div>
+
+  <!-- COMMISSIONER -->
+  <div id="view-comm" class="hidden">
+    <div class="card comm" style="padding:1.25rem;">
+      <div class="form-group">
+        <label>Published Google Sheet CSV URL</label>
+        <input id="sheet-url" placeholder="https://docs.google.com/spreadsheets/d/e/…/pub?output=csv">
+      </div>
+      <p class="help" style="margin-bottom:1rem;">
+        The Birkdale response sheet is already wired in and re-syncs every few minutes, so submissions appear on their own — you only need this tab if the form moves.
+        It reads your Google Form output directly (<code>Timestamp, Name, Select 6 Golfers:</code>, six golfers in one comma-separated cell) and also handles six separate <code>Golfer 1…6</code> columns. Anything else, and it'll ask you to map the columns.
+        To repoint it: <code>File → Share → Publish to web → (your tab) → Comma-separated values (.csv)</code>, paste above, Sync, then Save URL.
+      </p>
+      <button class="btn" onclick="syncSheet()">Sync Entries from Sheet</button>
+      <button class="btn btn-secondary" onclick="saveUrl()">Save URL</button>
+      <span class="help" id="sync-status" style="margin-left:.5rem;"></span>
+      <div id="map-wrap" class="hidden" style="margin-top:1.25rem;"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — per-tournament values (see references/payout-and-scoring.md)
+   ============================================================ */
+
+/* Position → payout. OFFICIAL R&A breakdown for the 154th Open Championship
+   at Royal Birkdale (2026): $17.5M purse, $3.2M to the winner, money to 70th.
+   NOTE: the PGA TOUR/AP wire reported the purse as $17.75M, but this table plus
+   the R&A's non-qualifier tiers sums to $17.44M — consistent with the $17.5M
+   figure carried by Golf Digest, Yahoo and CBS. Using $17.5M.
+   Source: R&A / PGA TOUR purse breakdown published 14 July 2026. */
+const POS_BRACKETS = [
+  [1,3200000],[2,1842000],[3,1181000],[4,917000],[5,738000],
+  [6,639700],[7,549700],[8,463250],[9,406200],[10,367000],
+  [11,334200],[12,296000],[13,278500],[14,260700],[15,241900],
+  [16,222700],[17,212000],[18,202000],[19,193600],[20,184500],
+  [21,175900],[22,167100],[23,158100],[24,149300],[25,144250],
+  [26,138000],[27,133000],[28,128400],[29,122800],[30,116500],
+  [31,112700],[32,106900],[33,103100],[34,100200],[35,96700],
+  [36,92900],[37,88500],[38,84100],[39,81000],[40,78400],
+  [41,75200],[42,71500],[43,68300],[44,64400],[45,60700],
+  [46,57600],[47,55300],[48,53100],[49,50700],[50,49400],
+  [51,48350],[52,47500],[53,46800],[54,46100],[55,45300],
+  [56,44700],[57,44250],[58,43950],[59,43625],[60,43325],
+  [61,43100],[62,42900],[63,42700],[64,42500],[65,42150],
+  [66,41825],[67,41500],[68,41200],[69,40900],[70,40700]
+];
+
+// Which ESPN event is ours. ESPN's PGA scoreboard lists every event running this
+// week, so match by name rather than position in the array.
+const TOURNAMENT_MATCH = /the open|british open/i;
+
+// Flat value credited to a golfer who misses the cut. The R&A tiers non-qualifiers
+// ($12,900 / $10,750 / $9,100); ESPN doesn't rank cut players reliably, so use the base.
+const CUT_PAYOUT = 9100;
+const REFRESH    = 3 * 60 * 1000;
+
+// Optional alias map for known sheet→ESPN nickname mismatches
+const NAME_ALIASES = {
+  // 'matthew mccarty': 'matt mccarty',
+  // 'nicolas echavarria': 'nico echavarria',
+};
+
+// Default published-CSV URL — the Birkdale entry form's response sheet.
+const DEFAULT_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQjq31imL5kGQ1yzu5clgnPoL0oXN_M48j52mCrg8xT2kiMsmV6wJaVOBOnlEiaOwnHsgKl0D1csa2h/pub?output=csv';
+
+// Column mapping. This pool's Google Form emits: Timestamp | Name | Select 6 Golfers:
+// where the last column is ONE cell holding all six golfers, comma-separated.
+// `golfersCell` handles that shape; `golfers` handles six separate columns.
+// Either can be re-pointed by the mapping UI at sync time.
+let COLS = {
+  name: 'Name',
+  owner: '',
+  golfersCell: 'Select 6 Golfers:',
+  golfers: ['Golfer 1','Golfer 2','Golfer 3','Golfer 4','Golfer 5','Golfer 6']
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let entries  = [];     // {name, owner, golfers:[...6]}
+let scores   = {};     // normalizedName -> {name, total, posNum, posStr, thru, cut}
+let lastFetch = 0;
+let expandedRow = null;
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function payoutForPos(pos, cut){
+  if (cut) return CUT_PAYOUT;
+  if (!pos || pos <= 0) return 0;
+  for (const [maxPos, amt] of POS_BRACKETS){ if (pos <= maxPos) return amt; }
+  return 0;
+}
+function fmtMoney(n){ if(!n) return '$0'; if(n>=1e6) return '$'+(n/1e6).toFixed(2)+'M'; if(n>=1e3) return '$'+Math.round(n/1e3)+'K'; return '$'+n; }
+function fmtMoneyFull(n){ return '$'+(n||0).toLocaleString('en-US'); }
+function fmtScore(s){ if(s==null) return '—'; if(s===0) return 'E'; return s>0?('+'+s):(''+s); }
+function scoreClass(s){ if(s==null) return ''; if(s<0) return 'score-under'; if(s>0) return 'score-over'; return 'score-even'; }
+function normalizeStr(s){
+  return (s||'')
+    .replace(/ø/g,'o').replace(/Ø/g,'o')
+    .replace(/æ/g,'ae').replace(/Æ/g,'ae')
+    .replace(/å/g,'a').replace(/Å/g,'a')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase().trim();
+}
+
+/* ============================================================
+   LIVE SCORES (ESPN, with CORS-proxy fallback)
+   ============================================================ */
+// The CORS proxy is a free public service and can stall rather than fail.
+// Without a timeout an unsettled fetch wedges the UI on "Loading…" forever,
+// so every network call gets a hard deadline.
+function fetchWithTimeout(url, opts, ms){
+  const ctl = new AbortController();
+  const t = setTimeout(()=>ctl.abort(), ms || 8000);
+  return fetch(url, Object.assign({}, opts, {signal: ctl.signal}))
+    .finally(()=>clearTimeout(t));
+}
+
+async function fetchScores(force){
+  if (!force && lastFetch && Date.now()-lastFetch < REFRESH) return;
+  lastFetch = Date.now();
+  const dot = document.getElementById('state-dot'), txt = document.getElementById('state-text');
+
+  const ESPN_URL = 'https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard';
+  const PROXY    = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(ESPN_URL);
+
+  let data = null;
+  for (const url of [ESPN_URL, PROXY]){
+    try { const r = await fetchWithTimeout(url, {}, 8000); if (r.ok){ data = await r.json(); break; } } catch(e){}
+  }
+  if (!data){
+    dot.className='status-dot err'; txt.textContent='Couldn\u2019t load live scores — try Refresh';
+    renderStandings(); return;
+  }
+
+  try {
+    // ESPN returns every PGA event in progress this week — during Open week that
+    // includes the opposite-field Corales Puntacana. Pick our event by name and
+    // only fall back to the first if the match fails.
+    const evs   = (data.events) || [];
+    const event = evs.find(e => TOURNAMENT_MATCH.test(e.name || '')) || evs[0];
+    const comp  = event && event.competitions && event.competitions[0];
+    const comps = (comp && comp.competitors) || [];
+    const status = comp && comp.status;
+    const round  = (status && status.period) || 1;
+    const state  = (status && status.type && status.type.state) || '';
+    const live   = (state === 'in' || state === 'post');
+
+    scores = {};
+    comps.forEach((c, idx) => {
+      const nameRaw = (c.athlete && (c.athlete.displayName || c.athlete.fullName)) || '';
+      if (!nameRaw) return;
+      const key = normalizeStr(nameRaw);
+
+      // total score to par
+      let total = 0;
+      const ss = c.score;
+      if (!(ss==='E' || ss==='-' || ss==='' || ss==null)){ const n=parseInt(ss); if(!isNaN(n)) total=n; }
+
+      // position — before the first tee shot ESPN sends no position, so DON'T
+      // manufacture one from list order or everyone gets paid for nothing.
+      const posObj = c.status && c.status.position;
+      const cut = /cut|wd/i.test((c.status && c.status.type && c.status.type.name) || '') || /CUT|WD/i.test((posObj && posObj.displayName)||'');
+      const realPos = posObj && parseInt(posObj.id);
+      let posNum, posStr;
+      if (cut){ posNum = 999; posStr = 'CUT'; }
+      else if (realPos){ posNum = realPos; posStr = (posObj && posObj.displayName) || String(realPos); }
+      else if (live){ posNum = idx+1; posStr = String(idx+1); }
+      else { posNum = 0; posStr = '–'; }   // pre-tournament: no position, no money
+
+      // thru (holes in current round)
+      const ls = c.linescores || [];
+      const cur = ls.find(r=>r.period===round);
+      let thru = '';
+      if (cur){ const h=(cur.linescores||[]).length; thru = h>=18?'F':(h>0?String(h):''); }
+      else if (ls.length){ thru='F'; }
+
+      scores[key] = { name:nameRaw, total, posNum, posStr, thru, cut };
+    });
+
+    dot.className = 'status-dot' + (state==='in'?'':' pre');
+    txt.textContent = state==='in' ? 'Live — round '+round
+                    : (state==='post' ? 'Final'
+                    : 'Teeing off Thursday — no scores yet');
+    document.getElementById('refresh-pill').textContent = 'Scores: ' + new Date().toLocaleTimeString();
+  } catch(e){
+    dot.className='status-dot err'; txt.textContent='Score parse error';
+  }
+  renderStandings();
+}
+
+function getGolferData(name){
+  const key = normalizeStr(name);
+  const alias = NAME_ALIASES[key] || key;
+  let s = scores[alias] || scores[key];
+  if (!s){
+    // fuzzy: last name + first initial
+    const np = alias.split(' ');
+    for (const k of Object.keys(scores)){
+      const kp = k.split(' ');
+      if (kp.length>=2 && np.length>=2 && kp[kp.length-1]===np[np.length-1] && kp[0][0]===np[0][0]){ s=scores[k]; break; }
+    }
+  }
+  if (!s) return { earnings:0, total:null, posStr:'–', thru:'', cut:false, name };
+  return { earnings: payoutForPos(s.posNum, s.cut), total: s.total, posStr: s.posStr, thru: s.thru, cut: s.cut, name: s.name };
+}
+
+/* ============================================================
+   STANDINGS
+   ============================================================ */
+function calcEntry(e){
+  const rows = (e.golfers||[]).map(name => { const d=getGolferData(name); return { name, d, earnings:d.earnings }; });
+  const totalEarnings = rows.reduce((s,r)=>s+(r.earnings||0),0);
+  const started = rows.filter(r=>{
+    if (r.d.cut) return false;
+    if (r.d.thru && r.d.thru!=='') return true;
+    const p=r.d.posStr; return p && p!=='-' && p!=='–';
+  });
+  const scoreToPar = started.length ? started.reduce((s,r)=>s+(r.d.total||0),0) : null;
+  return { totalEarnings, scoreToPar, rows };
+}
+
+function renderStandings(){
+  const wrap = document.getElementById('standings-table-wrap');
+  if (!entries.length){ wrap.innerHTML='<div class="no-data">No entries in yet — the board fills in automatically as teams are submitted.</div>'; return; }
+
+  const scored = entries.map(e=>({ e, c: calcEntry(e) })).sort((a,b)=> b.c.totalEarnings - a.c.totalEarnings);
+
+  let html = '<table><thead><tr><th>#</th><th>Entry</th><th>Score</th><th>Proj. Winnings</th><th>Golfers</th></tr></thead><tbody>';
+  scored.forEach((row,i)=>{
+    const c=row.c, e=row.e, rk=i+1;
+    const chips = c.rows.map(r=>{
+      const cls = r.d.cut ? 'missed-cut' : (r.d.total!=null && r.d.posStr && /^(1|T?1$)/.test(r.d.posStr) ? 'leading' : 'made-cut');
+      return '<span class="chip '+cls+'">'+r.name.split(' ').slice(-1)[0]+' '+fmtScore(r.d.total)+'</span>';
+    }).join('');
+    html += '<tr class="entry-row" onclick="toggleExpand('+i+')">'
+      + '<td class="rank rank-'+rk+'">'+rk+'</td>'
+      + '<td><div class="entry-name">'+(e.name||'—')+'</div>'+(e.owner?'<div class="entry-owner">'+e.owner+'</div>':'')+'</td>'
+      + '<td><span class="score-num '+scoreClass(c.scoreToPar)+'">'+fmtScore(c.scoreToPar)+'</span></td>'
+      + '<td class="earnings">'+fmtMoneyFull(c.totalEarnings)+'</td>'
+      + '<td><div class="golfer-chips">'+chips+'<span class="chevron">'+(expandedRow===i?'▲':'▼')+'</span></div></td>'
+      + '</tr>';
+    if (expandedRow===i){
+      const cards = c.rows.map(r=>{
+        const cls = r.d.cut ? 'missed-cut' : '';
+        return '<div class="golfer-card '+cls+'">'
+          + '<div class="golfer-card-name">'+r.name+'</div>'
+          + '<div class="golfer-card-score '+scoreClass(r.d.total)+'">'+fmtScore(r.d.total)+'</div>'
+          + '<div class="golfer-card-meta">'+(r.d.cut?'Missed cut':('Pos '+r.d.posStr+(r.d.thru?' · thru '+r.d.thru:'')))+'</div>'
+          + '<div class="golfer-card-earn">'+fmtMoneyFull(r.earnings)+'</div>'
+          + '</div>';
+      }).join('');
+      html += '<tr class="expand-row"><td colspan="5"><div class="expand-inner"><div class="golfer-card-grid">'+cards+'</div></div></td></tr>';
+    }
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+function toggleExpand(i){ expandedRow = expandedRow===i?null:i; renderStandings(); }
+
+/* ============================================================
+   PAYOUTS TAB
+   ============================================================ */
+function renderPayouts(){
+  const grid = document.getElementById('payout-grid');
+  const ord = (n)=>{ const s=['th','st','nd','rd'],v=n%100; return n+(s[(v-20)%10]||s[v]||s[0]); };
+  let last=0, html='';
+  POS_BRACKETS.forEach(([maxPos,amt])=>{
+    const label = (last+1===maxPos) ? ord(maxPos) : (ord(last+1)+'–'+ord(maxPos));
+    html += '<div><span>'+label+'</span><span>'+fmtMoneyFull(amt)+'</span></div>';
+    last = maxPos;
+  });
+  html += '<div><span>Missed cut</span><span>'+fmtMoneyFull(CUT_PAYOUT)+'</span></div>';
+  grid.innerHTML = html;
+}
+
+/* ============================================================
+   SHEET SYNC + COLUMN MAPPING
+   ============================================================ */
+function parseCSV(text){
+  // simple CSV with quoted-field support
+  const rows=[]; let row=[], field='', q=false;
+  for (let i=0;i<text.length;i++){
+    const ch=text[i];
+    if (q){ if(ch==='"'){ if(text[i+1]==='"'){field+='"';i++;} else q=false; } else field+=ch; }
+    else { if(ch==='"') q=true; else if(ch===',') {row.push(field);field='';} else if(ch==='\n'){row.push(field);rows.push(row);row=[];field='';} else if(ch==='\r'){} else field+=ch; }
+  }
+  if (field.length||row.length){ row.push(field); rows.push(row); }
+  return rows.filter(r=>r.some(c=>c.trim()!==''));
+}
+
+function saveUrl(){
+  const u=document.getElementById('sheet-url').value.trim();
+  try{ localStorage.setItem('golfpool.sheetUrl', u); }catch(e){}
+  setStatus('Saved.');
+}
+function setStatus(t){ const el=document.getElementById('sync-status'); if(el) el.textContent=t; }
+
+async function syncSheet(background){
+  const url=(document.getElementById('sheet-url').value||'').trim();
+  if(!url){ setStatus('Enter a published CSV URL first.'); return; }
+  if(!background) setStatus('Syncing…');
+  let text;
+  try{
+    let r = await fetchWithTimeout(url, {cache:'no-store'}, 8000);
+    if(!r.ok) throw 0;
+    text = await r.text();
+    if(!text || text.trim().startsWith('<')) throw 0;
+  }catch(e){
+    // try proxy
+    try{ const p='https://api.allorigins.win/raw?url='+encodeURIComponent(url); const r=await fetchWithTimeout(p, {}, 8000); text=await r.text(); }
+    catch(e2){ if(!background) setStatus('Could not load CSV — is the sheet published?'); return; }
+  }
+  const rows = parseCSV(text);
+  if(!rows.length){ setStatus('Sheet looks empty — is it published to the web?'); return; }
+  const hdrs = rows[0].map(h=>h.trim());
+
+  // Headers but no submissions yet — that's a valid state, not an error.
+  if(rows.length===1){
+    entries = [];
+    try{ localStorage.setItem('golfpool.entries','[]'); }catch(e){}
+    setStatus('Sheet is live — no entries submitted yet.');
+    renderStandings();
+    return;
+  }
+
+  // Shape A: six separate golfer columns.
+  const sixCols = [COLS.name, ...COLS.golfers].every(n=>hdrs.includes(n));
+  if (sixCols){ COLS.golfersCell=''; applyMapping(hdrs, rows, background); return; }
+
+  // Shape B: one cell holding all six golfers, comma-separated (Google Form output).
+  const combined = detectCombinedCell(hdrs, rows);
+  if (combined){ COLS.name = combined.name; COLS.golfersCell = combined.cell; COLS.owner=''; applyMapping(hdrs, rows, background); return; }
+
+  if(!background) showColumnMapping(hdrs, rows);
+}
+
+// Find the column holding all six golfers, plus the entrant-name column to pair
+// with it. Prefer the header name (works on an empty sheet); fall back to
+// sniffing the data for comma-separated lists (works on odd header text).
+function detectCombinedCell(hdrs, rows){
+  const body = rows.slice(1);
+  let cell = hdrs.find(h=>/golfer|picks?|selections?/i.test(h)) || '';
+
+  if (!cell){
+    for (let i=0;i<hdrs.length;i++){
+      const vals = body.map(r=>(r[i]||'').trim()).filter(Boolean);
+      if (!vals.length) continue;
+      if (vals.every(v=>v.split(',').filter(x=>x.trim()).length>=3)){ cell = hdrs[i]; break; }
+    }
+  }
+  if (!cell) return null;
+
+  const name = hdrs.find(h=>/^(name|entry|entrant|player|owner)/i.test(h.trim()))
+            || hdrs.find(h=>!/timestamp/i.test(h) && h!==cell);
+  return name ? { name, cell } : null;
+}
+
+function bestMatch(label, hdrs){
+  const l=label.toLowerCase().replace(/\s/g,'');
+  let m=hdrs.find(h=>h.toLowerCase().replace(/\s/g,'')===l); if(m) return m;
+  m=hdrs.find(h=>h.toLowerCase().includes(label.toLowerCase())); if(m) return m;
+  const num=label.match(/\d+/); if(num){ m=hdrs.find(h=>h.toLowerCase().includes('golfer')&&h.includes(num[0])); if(m) return m; }
+  return '';
+}
+
+function showColumnMapping(hdrs, rows){
+  const wrap=document.getElementById('map-wrap');
+  const opt=(sel)=>'<option value="">—</option>'+hdrs.map(h=>'<option '+(h===sel?'selected':'')+'>'+h+'</option>').join('');
+  const fields=[['name','Entry Name'],['owner','Owner (optional)'],['g1','Golfer 1'],['g2','Golfer 2'],['g3','Golfer 3'],['g4','Golfer 4'],['g5','Golfer 5'],['g6','Golfer 6']];
+  let html='<div class="card-header" style="margin-bottom:.5rem;">Map your columns</div>';
+  html+='<p class="help" style="margin-bottom:.75rem;">If your form puts all six golfers in a single comma-separated cell, pick that column below and leave Golfer 1–6 blank.</p>';
+  html+='<table><tr><td>All six golfers in one column</td><td><select id="map-cell">'+opt(bestMatch('Golfer',hdrs))+'</select></td></tr>';
+  fields.forEach(([k,lbl],idx)=>{
+    const guess = k==='name'?bestMatch('Name',hdrs): k==='owner'?bestMatch('Owner',hdrs): bestMatch('Golfer '+(idx-1),hdrs);
+    html+='<tr><td>'+lbl+'</td><td><select id="map-'+k+'">'+opt(guess)+'</select></td></tr>';
+  });
+  html+='</table><div style="margin-top:.75rem;"><button class="btn" onclick="confirmMapping()">Use this mapping</button></div>';
+  wrap.innerHTML=html; wrap.classList.remove('hidden');
+  wrap._rows = rows; wrap._hdrs = hdrs;
+}
+function confirmMapping(){
+  const wrap=document.getElementById('map-wrap');
+  const get=id=>document.getElementById(id).value;
+  COLS = {
+    name: get('map-name'),
+    owner: get('map-owner'),
+    golfersCell: get('map-cell'),
+    golfers: ['map-g1','map-g2','map-g3','map-g4','map-g5','map-g6'].map(id=>get(id)).filter(Boolean)
+  };
+  applyMapping(wrap._hdrs, wrap._rows);
+  wrap.classList.add('hidden');
+}
+
+function applyMapping(hdrs, rows, background){
+  const idx=name=>hdrs.indexOf(name);
+  const iName=idx(COLS.name), iOwner=COLS.owner?idx(COLS.owner):-1;
+  const iCell=COLS.golfersCell?idx(COLS.golfersCell):-1;
+  const iG=(COLS.golfers||[]).map(idx);
+
+  entries = rows.slice(1).map(r=>{
+    let golfers;
+    if (iCell>=0){
+      // one cell, six golfers, comma-separated
+      golfers = (r[iCell]||'').split(',').map(s=>s.trim()).filter(Boolean);
+    } else {
+      golfers = iG.map(i=> i>=0 ? (r[i]||'').trim() : '').filter(Boolean);
+    }
+    return {
+      name: (r[iName]||'').trim(),
+      owner: iOwner>=0 ? (r[iOwner]||'').trim() : '',
+      golfers
+    };
+  }).filter(e=>e.name || e.golfers.length);
+
+  try{ localStorage.setItem('golfpool.entries', JSON.stringify(entries)); localStorage.setItem('golfpool.cols', JSON.stringify(COLS)); }catch(e){}
+  setStatus(entries.length+' entries synced.');
+  if (background){ renderStandings(); return; }   // don't hijack the tab on a timed refresh
+  fetchScores(true);
+  showTab('standings');
+}
+
+/* ============================================================
+   TABS + INIT
+   ============================================================ */
+function showTab(t){
+  document.getElementById('view-standings').classList.toggle('hidden', t!=='standings');
+  document.getElementById('view-payouts').classList.toggle('hidden', t!=='payouts');
+  document.getElementById('view-comm').classList.toggle('hidden', t!=='comm');
+  ['standings','payouts','comm'].forEach(x=>document.getElementById('tab-'+x).classList.toggle('active', x===t));
+  if (t==='payouts') renderPayouts();
+  if (t==='standings') renderStandings();
+}
+
+(function init(){
+  // restore persisted state (optional convenience; first paint does not require it)
+  let url = DEFAULT_SHEET_URL;
+  try {
+    url = localStorage.getItem('golfpool.sheetUrl') || DEFAULT_SHEET_URL;
+    const e = localStorage.getItem('golfpool.entries'); if(e) entries = JSON.parse(e);
+    const c = localStorage.getItem('golfpool.cols'); if(c) COLS = JSON.parse(c);
+  } catch(e){}
+  document.getElementById('sheet-url').value = url;
+
+  renderPayouts();
+  renderStandings();
+  if (url) syncSheet();          // pull entries straight away
+  fetchScores(true);
+
+  // keep both entries and scores current: new submissions show up on their own,
+  // and scores refresh through the round.
+  setInterval(()=>{ if(document.getElementById('sheet-url').value) syncSheet(true); }, REFRESH);
+  setInterval(()=>{ if(entries.length) fetchScores(false); }, REFRESH);
+})();
+</script>
+</body>
+</html>
