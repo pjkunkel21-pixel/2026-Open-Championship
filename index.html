@@ -118,12 +118,12 @@
     <div class="header-text">
       <div class="header-badge">154th Open Championship &middot; Royal Birkdale</div>
       <h1>The Open <span>Pool</span> 2026</h1>
-      <div class="header-sub">Southport, England &middot; ranked by projected winnings &middot; all 6 golfers count</div>
+      <div class="header-sub">Southport, England &middot; ranked by official earnings &middot; all 6 golfers count</div>
       <div class="header-meta">
         <div><strong>Format</strong>Each entry drafts 6 golfers</div>
-        <div><strong>Scoring</strong>Sum of projected winnings</div>
-        <div><strong>Purse</strong>$17.5M &middot; winner $3.2M</div>
-        <div><strong>Live</strong>Via ESPN &middot; auto-refresh</div>
+        <div><strong>Scoring</strong>Sum of official earnings</div>
+        <div><strong>Purse</strong>$17.75M &middot; winner $3.2M</div>
+        <div><strong>Champion</strong>Ryan Fox &middot; &minus;10</div>
       </div>
     </div>
 
@@ -164,7 +164,7 @@
     </div>
     <!-- ===================== PAYOUT BASIS NOTE ===================== -->
     <div class="note" id="estimate-note">
-      Payouts are the R&amp;A's <strong>official 2026 breakdown</strong> for Royal Birkdale ($17.5M purse &middot; $3.2M to the winner &middot; money to 70th). Standings during play are still a <strong>projection</strong> — a golfer's money is looked up from his position at this moment, and ties are paid the full bracket amount rather than averaged. Missed-cut golfers are credited $9,100.
+      <strong>Final result.</strong> Ryan Fox won the 154th Open at &minus;10. Standings use each golfer's <strong>official earnings</strong> from the R&amp;A's payout table (record purse $17.75M &middot; $3.2M to the winner). Ties are split evenly, exactly as the R&amp;A pays them &mdash; so a T4 earns the average of 4th and 5th money, not full 4th. Drafted golfers who missed the cut are credited the $9,100 non-qualifier base.
     </div>
     <div class="card">
       <div class="card-header">Pool Standings</div>
@@ -175,10 +175,10 @@
   <!-- PAYOUTS -->
   <div id="view-payouts" class="hidden">
     <div class="card">
-      <div class="card-header">Official Payout Structure &middot; $17.5M Purse</div>
+      <div class="card-header">Payout by Position &middot; $17.75M Purse</div>
       <div class="payout-grid" id="payout-grid"></div>
     </div>
-    <div class="note">Official R&amp;A figures for the 154th Open. Non-qualifiers after two rounds: leading 10 professionals and ties $12,900; next 20 and ties $10,750; the remainder $9,100 — this board credits every missed cut at the $9,100 base. If more than 70 players make the cut, the R&amp;A reduces each paying place by $125 down to a $39,450 floor.</div>
+    <div class="note">The R&amp;A's per-position amounts (record purse $17.75M). When players tie, they split the combined money for the positions they occupy — so the actual per-golfer earnings in the standings can differ from a single line here. Non-qualifiers: leading 10 pros and ties $12,900; next 20 and ties $10,750; the remainder $9,100 — this board credits every missed cut at the $9,100 base.</div>
   </div>
 
   <!-- COMMISSIONER -->
@@ -207,12 +207,12 @@
    CONFIG — per-tournament values (see references/payout-and-scoring.md)
    ============================================================ */
 
-/* Position → payout. OFFICIAL R&A breakdown for the 154th Open Championship
-   at Royal Birkdale (2026): $17.5M purse, $3.2M to the winner, money to 70th.
-   NOTE: the PGA TOUR/AP wire reported the purse as $17.75M, but this table plus
-   the R&A's non-qualifier tiers sums to $17.44M — consistent with the $17.5M
-   figure carried by Golf Digest, Yahoo and CBS. Using $17.5M.
-   Source: R&A / PGA TOUR purse breakdown published 14 July 2026. */
+/* Position → payout. Official R&A per-position amounts for the 154th Open
+   Championship at Royal Birkdale (2026). Record purse $17.75M, $3.2M to the
+   winner. This is the *by-position* reference; actual per-golfer earnings when
+   players tie are in FINAL_RESULTS below (ties split the combined money, and
+   because ties near the pay line pull in extra places, 78 players were paid,
+   not 70). Source: R&A / PGA TOUR payout tables, July 2026. */
 const POS_BRACKETS = [
   [1,3200000],[2,1842000],[3,1181000],[4,917000],[5,738000],
   [6,639700],[7,549700],[8,463250],[9,406200],[10,367000],
@@ -239,6 +239,96 @@ const TOURNAMENT_MATCH = /the open|british open/i;
 const CUT_PAYOUT = 9100;
 const REFRESH    = 3 * 60 * 1000;
 
+// ============================================================
+// FINAL OFFICIAL RESULTS — 154th Open Championship, Royal Birkdale (2026)
+// Source: PGA TOUR official payout table, published 19 July 2026.
+// The R&A AVERAGES ties, so these per-player figures already bake that in
+// (e.g. T4 = $827,500 = avg of positions 4 & 5). With the event complete,
+// the board reads money/score/position straight from here rather than
+// projecting from the positional brackets. Keys use normalizeStr().
+const TOURNAMENT_FINAL = true;
+const FINAL_RESULTS = {
+  'ryan fox':{p:'1',n:1,t:-10,m:3200000},
+  'cameron young':{p:'2',n:2,t:-9,m:1842000},
+  'sam burns':{p:'3',n:3,t:-8,m:1181000},
+  'scottie scheffler':{p:'T4',n:4,t:-7,m:827500},
+  'tommy fleetwood':{p:'T4',n:4,t:-7,m:827500},
+  'casey jarvis':{p:'T6',n:6,t:-6,m:550883},
+  'lucas herbert':{p:'T6',n:6,t:-6,m:550883},
+  'si woo kim':{p:'T6',n:6,t:-6,m:550883},
+  'adam scott':{p:'T9',n:9,t:-5,m:336380},
+  'russell henley':{p:'T9',n:9,t:-5,m:336380},
+  'rasmus neergaard-petersen':{p:'T9',n:9,t:-5,m:336380},
+  'ludvig aberg':{p:'T9',n:9,t:-5,m:336380},
+  'ryan gerard':{p:'T9',n:9,t:-5,m:336380},
+  'corey conners':{p:'T14',n:14,t:-4,m:234325},
+  'sungjae im':{p:'T14',n:14,t:-4,m:234325},
+  'hideki matsuyama':{p:'T14',n:14,t:-4,m:234325},
+  'bryson dechambeau':{p:'T14',n:14,t:-4,m:234325},
+  'rickie fowler':{p:'T18',n:18,t:-3,m:164575},
+  'chris gotterup':{p:'T18',n:18,t:-3,m:164575},
+  'bud cauley':{p:'T18',n:18,t:-3,m:164575},
+  'marco penge':{p:'T18',n:18,t:-3,m:164575},
+  'alex noren':{p:'T18',n:18,t:-3,m:164575},
+  'collin morikawa':{p:'T18',n:18,t:-3,m:164575},
+  'jordan smith':{p:'T18',n:18,t:-3,m:164575},
+  'kristoffer reitan':{p:'T18',n:18,t:-3,m:164575},
+  'dan brown':{p:'T18',n:18,t:-3,m:164575},
+  'xander schauffele':{p:'T18',n:18,t:-3,m:164575},
+  'john parry':{p:'T28',n:28,t:-2,m:102817},
+  'victor perez':{p:'T28',n:28,t:-2,m:102817},
+  'patrick cantlay':{p:'T28',n:28,t:-2,m:102817},
+  'brooks koepka':{p:'T28',n:28,t:-2,m:102817},
+  'pierceson coody':{p:'T28',n:28,t:-2,m:102817},
+  'robert macintyre':{p:'T28',n:28,t:-2,m:102817},
+  'jacob bridgeman':{p:'T28',n:28,t:-2,m:102817},
+  'max homa':{p:'T28',n:28,t:-2,m:102817},
+  'shane lowry':{p:'T28',n:28,t:-2,m:102817},
+  'cameron john':{p:'T28',n:28,t:-2,m:102817},
+  'kazuma kobori':{p:'T28',n:28,t:-2,m:102817},
+  'jackson suber':{p:'T28',n:28,t:-2,m:102817},
+  'thomas detry':{p:'T40',n:40,t:-1,m:69750},
+  'j.j. spaun':{p:'T40',n:40,t:-1,m:69750},
+  'kurt kitayama':{p:'T40',n:40,t:-1,m:69750},
+  'michael thorbjornsen':{p:'T40',n:40,t:-1,m:69750},
+  'matt wallace':{p:'T40',n:40,t:-1,m:69750},
+  'rory mcilroy':{p:'T40',n:40,t:-1,m:69750},
+  'matthew southgate':{p:'T46',n:46,t:0,m:51707},
+  'eugenio chacarra':{p:'T46',n:46,t:0,m:51707},
+  'patrick reed':{p:'T46',n:46,t:0,m:51707},
+  'francesco molinari':{p:'T46',n:46,t:0,m:51707},
+  'hennie du plessis':{p:'T46',n:46,t:0,m:51707},
+  'jose luis ballester':{p:'T46',n:46,t:0,m:51707},
+  'jon rahm':{p:'T46',n:46,t:0,m:51707},
+  'ryo hisatsune':{p:'T53',n:53,t:1,m:45183},
+  'michael brennan':{p:'T53',n:53,t:1,m:45183},
+  'shaun norris':{p:'T53',n:53,t:1,m:45183},
+  'sahith theegala':{p:'T53',n:53,t:1,m:45183},
+  'alex smalley':{p:'T53',n:53,t:1,m:45183},
+  'eric cole':{p:'T53',n:53,t:1,m:45183},
+  'ben griffin':{p:'T59',n:59,t:2,m:43025},
+  'aldrich potgieter':{p:'T59',n:59,t:2,m:43025},
+  'min woo lee':{p:'T59',n:59,t:2,m:43025},
+  'nick taylor':{p:'T59',n:59,t:2,m:43025},
+  'naoyuki kataoka':{p:'T59',n:59,t:2,m:43025},
+  'johnny keefer':{p:'T59',n:59,t:2,m:43025},
+  'peter uihlein':{p:'T65',n:65,t:3,m:41988},
+  'justin thomas':{p:'T65',n:65,t:3,m:41988},
+  'sepp straka':{p:'T67',n:67,t:4,m:41350},
+  'nico echavarria':{p:'T67',n:67,t:4,m:41350},
+  'andy sullivan':{p:'T69',n:69,t:5,m:40800},
+  'tyrrell hatton':{p:'T69',n:69,t:5,m:40800},
+  'laurie canter':{p:'T71',n:71,t:6,m:40450},
+  'mj daffue':{p:'T71',n:71,t:6,m:40450},
+  'alex fitzpatrick':{p:'T71',n:71,t:6,m:40450},
+  'keegan bradley':{p:'T74',n:74,t:7,m:40075},
+  'kazuki higa':{p:'T74',n:74,t:7,m:40075},
+  'marcus plunkett':{p:'T74',n:74,t:7,m:40075},
+  'jack mcdonald':{p:'77',n:77,t:8,m:39825},
+  'jesper svensson':{p:'78',n:78,t:9,m:39700},
+};
+
+
 // Optional alias map for known sheet→ESPN nickname mismatches
 const NAME_ALIASES = {
   // 'matthew mccarty': 'matt mccarty',
@@ -262,7 +352,10 @@ let COLS = {
 /* ============================================================
    STATE
    ============================================================ */
-let entries  = [];     // {name, owner, golfers:[...6]}
+// Seeded with the entries fetched from the response sheet on 2026-07-19 so the
+// board renders populated on first paint. The published sheet stays the source
+// of truth: syncSheet() overwrites this on load and on every refresh.
+let entries  = [{"name": "BEN.", "owner": "", "golfers": ["Scottie Scheffler", "Wyndham Clark", "Sam Burns", "Patrick Cantlay", "Si Woo Kim", "Ben Griffin"]}, {"name": "Ruble", "owner": "", "golfers": ["Rory McIlroy", "Matt Fitzpatrick", "Robert MacIntyre", "Patrick Reed", "Tom Kim", "Johnny Keefer"]}, {"name": "Max", "owner": "", "golfers": ["Matt Fitzpatrick", "Tyrrell Hatton", "Collin Morikawa", "Chris Gotterup", "Patrick Reed", "Min Woo Lee"]}, {"name": "Ben P", "owner": "", "golfers": ["Tommy Fleetwood", "Matt Fitzpatrick", "Collin Morikawa", "Justin Thomas", "Maverick McNealy", "Brian Harman"]}, {"name": "Matt", "owner": "", "golfers": ["Rory McIlroy", "Matt Fitzpatrick", "Tyrrell Hatton", "Chris Gotterup", "Keita Nakajima", "Matthew Baldwin"]}, {"name": "Ryan Mord", "owner": "", "golfers": ["Rory McIlroy", "Matt Fitzpatrick", "Tyrrell Hatton", "Adam Scott", "Jason Day", "Gary Woodland"]}, {"name": "Blue", "owner": "", "golfers": ["Tommy Fleetwood", "Justin Rose", "Tyrrell Hatton", "Viktor Hovland", "Brian Harman", "Adam Scott"]}, {"name": "Alec McFarlane", "owner": "", "golfers": ["Matt Fitzpatrick", "Justin Rose", "Collin Morikawa", "Russell Henley", "Aaron Rai", "Patrick Reed"]}, {"name": "Nihal", "owner": "", "golfers": ["Tommy Fleetwood", "Tyrrell Hatton", "Robert MacIntyre", "Shane Lowry", "Russell Henley", "Patrick Reed"]}, {"name": "Pat", "owner": "", "golfers": ["Tommy Fleetwood", "Matt Fitzpatrick", "Collin Morikawa", "Robert MacIntyre", "Russell Henley", "Patrick Reed"]}];
 let scores   = {};     // normalizedName -> {name, total, posNum, posStr, thru, cut}
 let lastFetch = 0;
 let expandedRow = null;
@@ -303,9 +396,20 @@ function fetchWithTimeout(url, opts, ms){
 }
 
 async function fetchScores(force){
+  const dot = document.getElementById('state-dot'), txt = document.getElementById('state-text');
+
+  // Event complete — standings come from the official FINAL_RESULTS table, so
+  // there's nothing to fetch. Skip the network entirely.
+  if (TOURNAMENT_FINAL){
+    dot.className = 'status-dot';
+    txt.textContent = 'Final — Ryan Fox, \u221210';
+    const rp = document.getElementById('refresh-pill'); if (rp) rp.textContent = 'Official result';
+    renderStandings();
+    return;
+  }
+
   if (!force && lastFetch && Date.now()-lastFetch < REFRESH) return;
   lastFetch = Date.now();
-  const dot = document.getElementById('state-dot'), txt = document.getElementById('state-text');
 
   const ESPN_URL = 'https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard';
   const PROXY    = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(ESPN_URL);
@@ -378,6 +482,16 @@ async function fetchScores(force){
 function getGolferData(name){
   const key = normalizeStr(name);
   const alias = NAME_ALIASES[key] || key;
+
+  // Event complete: the official per-player table is the source of truth for
+  // money, score and position. Ties are already averaged into these figures.
+  if (TOURNAMENT_FINAL){
+    const f = FINAL_RESULTS[alias] || FINAL_RESULTS[key];
+    if (f) return { earnings:f.m, total:f.t, posStr:f.p, thru:'F', cut:false, name };
+    // not in the paid table -> missed the cut; credited the non-qualifier base
+    return { earnings:CUT_PAYOUT, total:null, posStr:'CUT', thru:'', cut:true, name };
+  }
+
   let s = scores[alias] || scores[key];
   if (!s){
     // fuzzy: last name + first initial
@@ -633,10 +747,12 @@ function showTab(t){
   if (url) syncSheet();          // pull entries straight away
   fetchScores(true);
 
-  // keep both entries and scores current: new submissions show up on their own,
-  // and scores refresh through the round.
+  // The event is over, so scores never change again — no score polling.
+  // Still re-sync the sheet periodically in case a straggler entry lands.
+  if (!TOURNAMENT_FINAL){
+    setInterval(()=>{ if(entries.length) fetchScores(false); }, REFRESH);
+  }
   setInterval(()=>{ if(document.getElementById('sheet-url').value) syncSheet(true); }, REFRESH);
-  setInterval(()=>{ if(entries.length) fetchScores(false); }, REFRESH);
 })();
 </script>
 </body>
